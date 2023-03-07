@@ -5,18 +5,7 @@
 #include "Block.h"
 
 // TODO: check whether ordered map is a better alternative here?
-// TODO: look into optimization: specifically, remove duplicate vertices & replace their index in the face writing by the one already in the list
-// Possible solution:
-//
-// create vector<vertices>
-//
-// for every face:
-//      for every vertex:
-//          if vertex is already in vector<vertices>:
-//              store the index of the found vertex
-//          else:
-//              add the vertex to vector<vertices>
-//              store the index of this vertex in vector<vertices>
+// TODO: implement materials
 
 Chunk::~Chunk()
 {
@@ -116,7 +105,6 @@ void Chunk::WriteNormals(std::ofstream& outputFile)
     outputFile << "vn " << -1.0f << " " <<  0.0f << " " <<  0.0f << "\n";
 }
 
-// Currently unused, might be used for optimization later
 std::vector<Position> Chunk::GenerateBlockVertices(Block* block)
 {
     std::vector<Position> vertices;
@@ -214,65 +202,6 @@ void Chunk::OptimizeVertex(int& vertexIdx, const std::vector<Position>& verts)
     }
 }
 
-//void Chunk::WriteFace(std::ofstream& outputFile, int blockIdx, int normalIdx, int v0, int v1, int v2)
-//{
-//    int i{ blockIdx * 8 }; // 8 faces per block, so vertex indices per block will be offset by 8 each time
-//    outputFile << "f "
-//        << i + v0 << "//" << normalIdx << " "
-//        << i + v1 << "//" << normalIdx << " "
-//        << i + v2 << "//" << normalIdx << "\n";
-//}
-
-//void Chunk::WriteFaces(std::ofstream& outputFile, Block* pBlock, int blockIdx)
-//{
-//    if (!HasNeighborInDirection(pBlock, 0, 0, -1))
-//    {
-//        constexpr int normalIndex{ 2 };
-//        WriteFace(outputFile, blockIdx, normalIndex, 1, 7, 5);
-//        WriteFace(outputFile, blockIdx, normalIndex, 1, 3, 7);
-//    }
-//
-//    // On X-axis
-//    if (!HasNeighborInDirection(pBlock, -1, 0, 0))
-//    {
-//        constexpr int normalIndex{ 6 };
-//        WriteFace(outputFile, blockIdx, normalIndex, 1, 4, 3);
-//        WriteFace(outputFile, blockIdx, normalIndex, 1, 2, 4);
-//    }
-//
-//    // Y+
-//    if (!HasNeighborInDirection(pBlock, 0, 1, 0))
-//    {
-//        constexpr int normalIndex{ 3 };
-//        WriteFace(outputFile, blockIdx, normalIndex, 3, 8, 7);
-//        WriteFace(outputFile, blockIdx, normalIndex, 3, 4, 8);
-//    }
-//
-//    // On X-axis
-//    if (!HasNeighborInDirection(pBlock, 1, 0, 0))
-//    {
-//        constexpr int normalIndex{ 5 };
-//        WriteFace(outputFile, blockIdx, normalIndex, 5, 7, 8);
-//        WriteFace(outputFile, blockIdx, normalIndex, 5, 8, 6);
-//    }
-//
-//    // Y-
-//    if (!HasNeighborInDirection(pBlock, 0, -1, 0))
-//    {
-//        constexpr int normalIndex{ 4 };
-//        WriteFace(outputFile, blockIdx, normalIndex, 1, 5, 6);
-//        WriteFace(outputFile, blockIdx, normalIndex, 1, 6, 2);
-//    }
-//
-//    // On Z-axis
-//    if (!HasNeighborInDirection(pBlock, 0, 0, 1))
-//    {
-//        constexpr int normalIndex{ 1 };
-//        WriteFace(outputFile, blockIdx, normalIndex, 2, 6, 8);
-//        WriteFace(outputFile, blockIdx, normalIndex, 2, 8, 4);
-//    }
-//}
-
 void Chunk::WriteFaces(std::ofstream& outputFile) const
 {
     for(const auto& face : m_ChunkFaces)
@@ -283,23 +212,6 @@ void Chunk::WriteFaces(std::ofstream& outputFile) const
             << face.v2 << "//" << face.vn << "\n";
     }
 }
-
-//void Chunk::WriteVertex(std::ofstream& outputFile, const Position& pos, int x, int y, int z)
-//{
-//    outputFile << "v " << pos.x + x << " " << pos.y + y << " " << pos.z + z << "\n";
-//}
-
-//void Chunk::WriteVertices(std::ofstream& outputFile, const Position& pos)
-//{
-//    WriteVertex(outputFile, pos, 0, 0, 0);
-//    WriteVertex(outputFile, pos, 0, 0, 1);
-//    WriteVertex(outputFile, pos, 0, 1, 0);
-//    WriteVertex(outputFile, pos, 0, 1, 1);
-//    WriteVertex(outputFile, pos, 1, 0, 0);
-//    WriteVertex(outputFile, pos, 1, 0, 1);
-//    WriteVertex(outputFile, pos, 1, 1, 0);
-//    WriteVertex(outputFile, pos, 1, 1, 1);
-//}
 
 void Chunk::WriteVertices(std::ofstream& outputFile) const
 {
