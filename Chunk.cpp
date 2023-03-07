@@ -6,6 +6,7 @@
 
 // TODO: check whether ordered map is a better alternative here?
 // TODO: implement materials
+// TODO: condense .obj even more by using quads?
 
 Chunk::~Chunk()
 {

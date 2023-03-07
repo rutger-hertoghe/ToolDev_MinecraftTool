@@ -37,12 +37,8 @@ private:
 	void AddOptimizedFacesAndVerts(Face& face, const std::vector<Position>& verts);
 	void OptimizeVertex(int& vertexIdx, const std::vector<Position>& verts); // TODO: rename?
 
-	//void WriteFace(std::ofstream& outputFile, int blockIdx, int normalIdx, int v0, int v1, int v2);
-	//void WriteFaces(std::ofstream& outputFile, Block* pBlock, int blockIdx);
 	void WriteFaces(std::ofstream& outputFile) const;
 
-	//void WriteVertex(std::ofstream& outputFile, const Position& pos, int x, int y, int z);
-	//void WriteVertices(std::ofstream& outputFile, const Position& pos);
 	void WriteVertices(std::ofstream& outputFile) const;
 };
 
