@@ -34,8 +34,12 @@ private:
 
 	std::vector<Position> GenerateBlockVertices(Block* pBlock);
 	std::vector<Face> ConstructFaces(Block* pBlock);
-	void AddOptimizedFacesAndVerts(Face& face, const std::vector<Position>& verts);
+
 	void OptimizeVertex(int& vertexIdx, const std::vector<Position>& verts); // TODO: rename?
+
+	void SortFacesByMaterial();
+	bool IsDifferentMaterial(Material& currentMaterial, Material faceMaterial) const;
+	void WriteMaterial(std::ofstream& outputFile, Material currentMaterial) const;
 
 	void WriteFaces(std::ofstream& outputFile) const;
 

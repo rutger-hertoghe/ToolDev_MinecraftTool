@@ -42,6 +42,11 @@ uint32_t Block::GetRelativeHashKey(int xOffset, int yOffset, int zOffset)
 	return hashKey;
 }
 
+Material Block::GetMaterial()
+{
+	return m_Material;
+}
+
 bool Block::SetMaterial(std::string material)
 {
 	if(material == "dirt")

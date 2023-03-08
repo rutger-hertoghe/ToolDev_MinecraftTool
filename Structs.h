@@ -1,4 +1,12 @@
 #pragma once
+enum class Material
+{
+	dirt,
+	glass,
+	stone,
+	wood,
+	ENUM_END
+};
 
 struct Position
 {
@@ -19,6 +27,8 @@ struct Face
 	int v0;
 	int v1;
 	int v2;
+	int v3;
 
 	int vn;
+	Material material;
 };

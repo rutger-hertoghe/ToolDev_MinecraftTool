@@ -2,14 +2,6 @@
 #include <string>
 
 #include "Structs.h"
-enum class Material
-{
-	dirt,
-	glass,
-	stone,
-	wood,
-	ENUM_END
-};
 
 class Block final
 {
@@ -19,6 +11,7 @@ public:
 	Position GetPosition();
 	uint32_t GetHashKey();
 	uint32_t GetRelativeHashKey(int xOffset, int yOffset, int zOffset);
+	Material GetMaterial();
 
 private:
 	Position m_Position;
