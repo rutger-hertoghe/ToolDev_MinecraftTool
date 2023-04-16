@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BLOCK_H
+#define BLOCK_H
+
 #include <string>
 
 #include "Structs.h"
@@ -8,10 +10,10 @@ class Block final
 public:
 	explicit Block(std::string material, Position position, bool opacity);
 
-	Position GetPosition();
-	uint32_t GetHashKey();
-	uint32_t GetRelativeHashKey(int xOffset, int yOffset, int zOffset);
-	Material GetMaterial();
+	Position GetPosition() const;
+	uint32_t GetHashKey() const;
+	uint32_t GetRelativeHashKey(int xOffset, int yOffset, int zOffset) const;
+	Material GetMaterial() const;
 
 private:
 	Position m_Position;
@@ -22,4 +24,4 @@ private:
 	bool SetMaterial(std::string material);
 	void GenerateHashKey();
 };
-
+#endif

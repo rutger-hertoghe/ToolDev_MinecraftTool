@@ -1,4 +1,6 @@
-#pragma once
+#ifndef STRUCT_H
+#define STRUCT_H
+
 enum class Material
 {
 	dirt,
@@ -32,3 +34,4 @@ struct Face
 	int vn;
 	Material material;
 };
+#endif

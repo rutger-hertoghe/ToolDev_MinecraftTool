@@ -7,7 +7,6 @@
 
 #include "Block.h"
 
-// TODO: check whether ordered map is a better alternative here?
 // TODO: implement materials
 
 Chunk::~Chunk()
@@ -34,13 +33,13 @@ void Chunk::LoadFromJson(const rapidjson::Document& jsonDoc)
         std::string material{ layer };
 
         // Remove whitespace from material string
-        material.erase(std::remove_if(material.begin(), material.end(), ::isspace), material.end());
+        std::erase_if(material, ::isspace);
 
         // OPACITY
         const bool opacity{ object["opaque"].GetBool() };
 
         // POSITIONS
-        const rapidjson::Value& positions = object["positions"];
+        const rapidjson::Value& positions{ object["positions"] };
 
         // Iterate through the array of positions
         for (rapidjson::SizeType j = 0; j < positions.Size(); j++) 
@@ -60,7 +59,9 @@ void Chunk::LoadFromJson(const rapidjson::Document& jsonDoc)
 void Chunk::WriteChunkObj(std::ofstream& outputFile)
 {
     // INFO
+    // author comment
     outputFile << "#.json to .obj converter by Rutger Hertoghe\n\n";
+    // material file specification
     outputFile << "mtllib minecraftMats.mtl\n\n";
 
     // CREATE & OPTIMIZE FACES
@@ -93,18 +94,30 @@ void Chunk::WriteChunkObj(std::ofstream& outputFile)
     WriteFaces(outputFile);
 }
 
-bool Chunk::HasNeighborInDirection(Block* pBlock, int xDir, int yDir, int zDir)
+bool Chunk::FaceNeedsRendering(Block* pBlock, int faceDirectionX, int faceDirectionY, int faceDirectionZ)
+{
+    const Block* pNeighborBlock{ GetNeighborInDirection(pBlock, faceDirectionX, faceDirectionY, faceDirectionZ) };
+    if (!pNeighborBlock)
+    {
+        return true;
+    }
+
+    if(pNeighborBlock->GetMaterial() == Material::glass)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+Block* Chunk::GetNeighborInDirection(Block* pBlock, int xDir, int yDir, int zDir)
 {
     const auto key{ pBlock->GetRelativeHashKey(xDir, yDir, zDir) };
-    try
+    if(m_Blocks.contains(key))
     {
-        auto val = m_Blocks.at(key);
+        return m_Blocks[key];
     }
-    catch (std::out_of_range&)
-    {
-        return false;
-    }
-    return true;
+    return nullptr;
 }
 
 void Chunk::WriteNormals(std::ofstream& outputFile)
@@ -142,42 +155,42 @@ std::vector<Face> Chunk::ConstructFaces(Block* pBlock)
     auto mat{ pBlock->GetMaterial() };
 
     std::vector<Face> faces;
-    if (!HasNeighborInDirection(pBlock, 0, 0, -1))
+    if (FaceNeedsRendering(pBlock, 0, 0, -1))
     {
         constexpr int normalIndex{ 2 };
         faces.emplace_back(Face{ 1, 3, 7, 5, normalIndex, mat});
     }
 
     // On X-axis
-    if (!HasNeighborInDirection(pBlock, -1, 0, 0))
+    if (FaceNeedsRendering(pBlock, -1, 0, 0))
     {
         constexpr int normalIndex{ 6 };
         faces.emplace_back(Face{ 1, 2, 4, 3, normalIndex, mat });
     }
 
     // Y+
-    if (!HasNeighborInDirection(pBlock, 0, 1, 0))
+    if (FaceNeedsRendering(pBlock, 0, 1, 0))
     {
         constexpr int normalIndex{ 3 };
         faces.emplace_back(Face{ 3, 4, 8, 7, normalIndex, mat });
     }
 
     // On X-axis
-    if (!HasNeighborInDirection(pBlock, 1, 0, 0))
+    if (FaceNeedsRendering(pBlock, 1, 0, 0))
     {
         constexpr int normalIndex{ 5 };
         faces.emplace_back(Face{ 5, 7, 8, 6, normalIndex, mat });
     }
 
     // Y-
-    if (!HasNeighborInDirection(pBlock, 0, -1, 0))
+    if (FaceNeedsRendering(pBlock, 0, -1, 0))
     {
         constexpr int normalIndex{ 4 };
         faces.emplace_back(Face{ 1, 5, 6, 2, normalIndex, mat });
     }
 
     // On Z-axis
-    if (!HasNeighborInDirection(pBlock, 0, 0, 1))
+    if (FaceNeedsRendering(pBlock, 0, 0, 1))
     {
         constexpr int normalIndex{ 1 };
         faces.emplace_back(Face{ 2, 6, 8, 4, normalIndex, mat });

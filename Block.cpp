@@ -1,5 +1,4 @@
 #include "Block.h"
-
 #include <iostream>
 
 class InvalidMaterial{};
@@ -18,17 +17,17 @@ Block::Block(std::string material, Position position, bool opacity)
 	GenerateHashKey();
 }
 
-Position Block::GetPosition()
+Position Block::GetPosition() const
 {
 	return m_Position;
 }
 
-uint32_t Block::GetHashKey()
+uint32_t Block::GetHashKey() const
 {
 	return m_HashKey;
 }
 
-uint32_t Block::GetRelativeHashKey(int xOffset, int yOffset, int zOffset)
+uint32_t Block::GetRelativeHashKey(int xOffset, int yOffset, int zOffset) const
 {
 	auto x = static_cast<uint8_t>(m_Position.x + xOffset) ;
 	auto y = static_cast<uint8_t>(m_Position.y + yOffset) ;
@@ -42,7 +41,7 @@ uint32_t Block::GetRelativeHashKey(int xOffset, int yOffset, int zOffset)
 	return hashKey;
 }
 
-Material Block::GetMaterial()
+Material Block::GetMaterial() const
 {
 	return m_Material;
 }

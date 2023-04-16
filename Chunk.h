@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CHUNK_H
+#define CHUNK_H
 #include <unordered_map>
 
 #include "Structs.h"
@@ -25,7 +26,8 @@ private:
 
 	void AddBlock(Block* block);
 
-	bool HasNeighborInDirection(Block* pBlock, int xDir, int yDir, int zDir);
+	bool FaceNeedsRendering(Block* pBlock, int faceDirectionX, int faceDirectionY, int faceDirectionZ);
+	Block* GetNeighborInDirection(Block* pBlock, int xDir, int yDir, int zDir);
 
 	void WriteNormals(std::ofstream& outputFile);
 
@@ -35,7 +37,8 @@ private:
 	std::vector<Position> GenerateBlockVertices(Block* pBlock);
 	std::vector<Face> ConstructFaces(Block* pBlock);
 
-	void OptimizeVertex(int& vertexIdx, const std::vector<Position>& verts); // TODO: rename?
+	// If vertex already exists in m_ChunkVertices, face uses that vertex instead (prevent duplicates), otherwise vertex is added to vertex container
+	void OptimizeVertex(int& vertexIdx, const std::vector<Position>& verts);
 
 	void SortFacesByMaterial();
 	bool IsDifferentMaterial(Material& currentMaterial, Material faceMaterial) const;
@@ -46,3 +49,4 @@ private:
 	void WriteVertices(std::ofstream& outputFile) const;
 };
 
+#endif
